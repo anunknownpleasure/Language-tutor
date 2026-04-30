@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Tutor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🇫🇷 Sophie — French Tutor</h1>
+
+        <div id="conversation"></div>
+
+        <div id="correction-box" class="hidden">
+            <strong>Correction:</strong>
+            <span id="correction-text"></span>
+        </div>
+
+        <div class="controls">
+            <button id="mic-btn" onmousedown="startRecording()" onmouseup="stopRecording()">
+                Hold to Speak
+            </button>
+            <p id="status">Press and hold the button to speak in French</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

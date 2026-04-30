@@ -1,4 +1,7 @@
+from pathlib import Path
 from pydantic_settings import BaseSettings
+
+ENV_FILE = Path(__file__).parent.parent / ".env"
 
 
 class Settings(BaseSettings):
@@ -14,7 +17,7 @@ class Settings(BaseSettings):
     tts_voice: str = "fr-FR-DeniseNeural"
 
     class Config:
-        env_file = ".env"
+        env_file = ENV_FILE
 
 
 settings = Settings()

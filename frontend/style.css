@@ -1,0 +1,117 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    background: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+}
+
+.container {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+h1 {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+#conversation {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 200px;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    border-radius: 8px;
+    max-width: 85%;
+}
+
+.message.user {
+    background: #e8f0fe;
+    align-self: flex-end;
+}
+
+.message.sophie {
+    background: #e6f4ea;
+    align-self: flex-start;
+}
+
+.message .label {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.message .french {
+    font-size: 1rem;
+}
+
+.message .english {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}
+
+#correction-box {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+#mic-btn {
+    padding: 16px 40px;
+    font-size: 1rem;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    user-select: none;
+}
+
+#mic-btn.recording {
+    background: #d93025;
+}
+
+#mic-btn:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+#status {
+    font-size: 0.85rem;
+    color: #666;
+    text-align: center;
+}
