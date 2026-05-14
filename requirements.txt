@@ -5,3 +5,5 @@ groq
 edge-tts
 pydantic-settings
 python-multipart
+sqlalchemy
+aiosqlite
