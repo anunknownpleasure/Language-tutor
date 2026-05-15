@@ -3,6 +3,7 @@ from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pipeline import run_pipeline
+from routers import lessons
 
 app = FastAPI(title="French Tutor API")
 
@@ -12,6 +13,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(lessons.router)
 
 
 @app.get("/api/health")
