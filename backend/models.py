@@ -37,6 +37,8 @@ class UserVocabulary(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     vocabulary_id: Mapped[int] = mapped_column(ForeignKey("vocabulary.id"), nullable=False)
+    score: Mapped[float] = mapped_column(Integer, default=0)       # running score 0-100
+    attempt_count: Mapped[int] = mapped_column(Integer, default=0) # total attempts made
     status: Mapped[str] = mapped_column(String, default="introduced")  # "introduced" or "learned"
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 

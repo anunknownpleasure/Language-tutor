@@ -115,3 +115,134 @@ h1 {
     color: #666;
     text-align: center;
 }
+
+/* ── Navigation ─────────────────────────────────────────────────────────── */
+
+.nav {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #555;
+    font-size: 0.95rem;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid #e0e0e0;
+}
+
+.nav a.active {
+    background: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
+}
+
+/* ── Lesson UI ───────────────────────────────────────────────────────────── */
+
+.lesson-header {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lesson-header h2 {
+    font-size: 1.3rem;
+    color: #1a73e8;
+}
+
+.lesson-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.lesson-chat {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    min-height: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.lesson-message {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.lesson-message.user {
+    background: #e8f0fe;
+    align-self: flex-end;
+}
+
+.lesson-message.sophie {
+    background: #f1f3f4;
+    align-self: flex-start;
+}
+
+.lesson-label {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.lesson-content {
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.lesson-status {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #1a73e8;
+    font-style: italic;
+    padding: 4px;
+}
+
+.lesson-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.lesson-controls input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.lesson-controls input:focus {
+    border-color: #1a73e8;
+}
+
+.lesson-controls button {
+    padding: 12px 24px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.lesson-controls button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}

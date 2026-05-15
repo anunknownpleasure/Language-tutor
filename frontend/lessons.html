@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Tutor — Lessons</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+
+        <nav class="nav">
+            <a href="index.html">Conversations</a>
+            <a href="lessons.html" class="active">Lessons</a>
+        </nav>
+
+        <div class="lesson-header">
+            <h2 id="word-label">Loading...</h2>
+            <div class="lesson-meta">
+                <span id="word-score">Score: 0</span>
+                <span id="word-attempts">Attempts: 0</span>
+                <span id="lesson-progress">Lessons completed: 0 / 10</span>
+            </div>
+        </div>
+
+        <div id="lesson-chat" class="lesson-chat"></div>
+
+        <div class="lesson-controls">
+            <input
+                id="lesson-input"
+                type="text"
+                placeholder="Type your response..."
+                autocomplete="off"
+            />
+            <button id="lesson-send">Send</button>
+        </div>
+
+    </div>
+    <script src="lessons.js"></script>
+</body>
+</html>
