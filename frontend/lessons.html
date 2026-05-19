@@ -10,9 +10,18 @@
     <div class="container">
 
         <nav class="nav">
-            <a href="index.html">Conversations</a>
+            <a href="index.html">Home</a>
             <a href="lessons.html" class="active">Lessons</a>
+            <a href="conversations.html">Conversations</a>
+            <a href="testing.html">Test</a>
         </nav>
+
+        <!-- Pattern card — shows the MT sentence pattern for this lesson -->
+        <div id="lesson-pattern" class="lesson-pattern hidden">
+            <div class="pattern-label">This lesson's pattern</div>
+            <div class="pattern-fr" id="pattern-fr"></div>
+            <div class="pattern-en" id="pattern-en"></div>
+        </div>
 
         <div class="lesson-header">
             <h2 id="word-label">Loading...</h2>
@@ -25,14 +34,26 @@
 
         <div id="lesson-chat" class="lesson-chat"></div>
 
+        <!-- Hidden audio element — plays Sophie's TTS responses -->
+        <audio id="sophie-audio" hidden></audio>
+
         <div class="lesson-controls">
-            <input
-                id="lesson-input"
-                type="text"
-                placeholder="Type your response..."
-                autocomplete="off"
-            />
-            <button id="lesson-send">Send</button>
+            <!-- Mic is the recommended input — prominent at top -->
+            <button id="lesson-mic" class="lesson-mic-btn">
+                🎤 Hold to speak
+            </button>
+            <p class="lesson-mic-hint">Recommended — speak your answer out loud</p>
+
+            <!-- Text is the fallback -->
+            <div class="lesson-text-row">
+                <input
+                    id="lesson-input"
+                    type="text"
+                    placeholder="or type here..."
+                    autocomplete="off"
+                />
+                <button id="lesson-send">Send</button>
+            </div>
         </div>
 
     </div>

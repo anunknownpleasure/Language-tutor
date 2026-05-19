@@ -1,6 +1,6 @@
 import base64
 from stt import transcribe
-from llm import get_tutor_response
+from llm import get_tutor_response, get_conversation_response
 from tts import synthesize
 
 
@@ -8,12 +8,17 @@ async def run_pipeline(
     audio_bytes: bytes,
     conversation_history: list[dict],
     audio_filename: str = "audio.webm",
+    scenario: dict | None = None,
 ) -> dict:
     # Stage 1: speech to text
     transcript = await transcribe(audio_bytes, audio_filename)
 
     # Stage 2: LLM response
-    llm_result = await get_tutor_response(transcript, conversation_history)
+    # If a scenario is provided use the conversation prompt, otherwise use the default tutor prompt
+    if scenario:
+        llm_result = await get_conversation_response(transcript, conversation_history, scenario)
+    else:
+        llm_result = await get_tutor_response(transcript, conversation_history)
 
     # Stage 3: text to speech
     audio_out = await synthesize(llm_result["response_fr"])

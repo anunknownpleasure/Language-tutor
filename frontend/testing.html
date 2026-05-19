@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Tutor — Testing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="lessons.html">Lessons</a>
+            <a href="conversations.html">Conversations</a>
+            <a href="testing.html" class="active">Test</a>
+        </nav>
+
+        <!-- Status screen — shown first -->
+        <div id="status-screen">
+            <h2>Level Test</h2>
+            <div id="test-status"></div>
+            <div id="stage-buttons"></div>
+        </div>
+
+        <!-- Stage 1: Multiple choice -->
+        <div id="stage1-screen" class="hidden">
+            <h2>Stage 1 — Multiple Choice</h2>
+            <p class="subtitle">Pick the correct French word for each English word.</p>
+            <div id="stage1-questions"></div>
+            <button id="stage1-submit">Submit answers</button>
+        </div>
+
+        <!-- Stage 2: Translation -->
+        <div id="stage2-screen" class="hidden">
+            <h2>Stage 2 — Translation</h2>
+            <p class="subtitle">Type the French translation for each English word.</p>
+            <div id="stage2-questions"></div>
+            <button id="stage2-submit">Submit answers</button>
+        </div>
+
+        <!-- Result screen -->
+        <div id="result-screen" class="hidden">
+            <h2>Result</h2>
+            <div id="result-content"></div>
+            <button id="back-to-status">Back to test overview</button>
+        </div>
+
+    </div>
+    <script src="testing.js"></script>
+</body>
+</html>

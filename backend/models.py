@@ -1,7 +1,20 @@
 from datetime import datetime
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base
+
+
+class LessonPattern(Base):
+    """One row per lesson — holds the MT sentence pattern for that lesson."""
+    __tablename__ = "lesson_patterns"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    level: Mapped[str] = mapped_column(String, nullable=False)           # "A1" or "A2"
+    lesson_number: Mapped[int] = mapped_column(Integer, nullable=False)  # 1-10
+    pattern_fr: Mapped[str] = mapped_column(String, nullable=False)      # e.g. "Je voudrais..."
+    pattern_en: Mapped[str] = mapped_column(String, nullable=False)      # "I would like..."
+    explanation: Mapped[str] = mapped_column(Text, nullable=False)       # how the pattern works
+    tip: Mapped[str] = mapped_column(Text, nullable=True)                # pronunciation / grammar tip
 
 
 class User(Base):
