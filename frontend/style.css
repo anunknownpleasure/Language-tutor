@@ -121,7 +121,8 @@ h1 {
 .nav {
     display: flex;
     gap: 16px;
-    justify-content: center;
+    align-items: center;
+    /* Links sit left; #nav-user uses margin-left: auto to sit right */
 }
 
 .nav a {
@@ -216,33 +217,459 @@ h1 {
 
 .lesson-controls {
     display: flex;
-    gap: 8px;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.lesson-controls input {
-    flex: 1;
-    padding: 12px 16px;
-    border: 1px solid #e0e0e0;
-    border-radius: 999px;
-    font-size: 1rem;
-    outline: none;
+/* ── Lesson pattern card ─────────────────────────────────────────────────── */
+
+.lesson-pattern {
+    background: #e8f0fe;
+    border: 1px solid #c5d8fb;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.lesson-controls input:focus {
-    border-color: #1a73e8;
+.pattern-label {
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1a73e8;
 }
 
-.lesson-controls button {
-    padding: 12px 24px;
+.pattern-fr {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+.pattern-en {
+    font-size: 0.9rem;
+    color: #444;
+    font-style: italic;
+}
+
+/* ── Lesson mic button ───────────────────────────────────────────────────── */
+
+.lesson-mic-btn {
+    width: 100%;
+    padding: 16px;
     background: #1a73e8;
     color: white;
     border: none;
     border-radius: 999px;
     font-size: 1rem;
     cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-.lesson-controls button:disabled {
+.lesson-mic-btn.recording {
+    background: #d93025;
+}
+
+.lesson-mic-btn:disabled {
     background: #aaa;
     cursor: not-allowed;
+}
+
+.lesson-mic-hint {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    margin: 4px 0 8px;
+}
+
+.lesson-text-row {
+    display: flex;
+    gap: 8px;
+}
+
+.lesson-text-row input {
+    flex: 1;
+    padding: 10px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.lesson-text-row input:focus {
+    border-color: #1a73e8;
+}
+
+.lesson-text-row button {
+    padding: 10px 20px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.lesson-text-row button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+/* ── Scenario selection ──────────────────────────────────────────────────── */
+
+.subtitle {
+    color: #666;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+#scenario-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.scenario-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.scenario-card h3 {
+    font-size: 1rem;
+    color: #1a73e8;
+}
+
+.scenario-card p {
+    font-size: 0.88rem;
+    color: #444;
+}
+
+.scenario-goal {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.scenario-card button {
+    align-self: flex-start;
+    margin-top: 6px;
+    padding: 8px 20px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.secondary-btn {
+    align-self: center;
+    padding: 8px 20px;
+    background: white;
+    color: #1a73e8;
+    border: 1px solid #1a73e8;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.scenario-banner {
+    background: #e8f0fe;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.correction-inline {
+    font-size: 0.83rem;
+    color: #b26a00;
+    background: #fff8e1;
+    border-left: 3px solid #f9a825;
+    padding: 6px 12px;
+    border-radius: 4px;
+    align-self: flex-start;
+    max-width: 85%;
+}
+
+/* ── Testing UI ──────────────────────────────────────────────────────────── */
+
+/* Lock / all-passed status messages */
+.test-locked {
+    color: #b00020;
+    background: #fdecea;
+    border-left: 4px solid #b00020;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.test-passed {
+    color: #1e6b2e;
+    background: #e6f4ea;
+    border-left: 4px solid #34a853;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
+
+/* Stage start / retake buttons on the status screen */
+.stage-btn {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: 10px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+}
+
+.stage-btn:hover {
+    background: #1558b0;
+}
+
+/* Individual question card */
+.test-question {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Radio-button label in Stage 1 */
+.test-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.15s;
+}
+
+.test-option:hover {
+    background: #f1f3f4;
+}
+
+.test-option input[type="radio"] {
+    accent-color: #1a73e8;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/* Example-sentence hint in Stage 2 */
+.test-hint {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}
+
+/* Text input in Stage 2 */
+.test-input {
+    padding: 10px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    width: 100%;
+}
+
+.test-input:focus {
+    border-color: #1a73e8;
+}
+
+/* Result screen — score number */
+.result-score {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    color: #1a73e8;
+    margin: 16px 0 8px;
+}
+
+/* Result screen — PASSED / FAILED label */
+.result-verdict {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.result-verdict.passed {
+    color: #1e6b2e;
+    background: #e6f4ea;
+}
+
+.result-verdict.failed {
+    color: #b00020;
+    background: #fdecea;
+}
+
+/* Submit and back buttons shared across test stages */
+#stage1-submit,
+#stage2-submit,
+#back-to-status {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 16px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+#stage1-submit,
+#stage2-submit {
+    background: #1a73e8;
+    color: white;
+}
+
+#stage1-submit:hover,
+#stage2-submit:hover {
+    background: #1558b0;
+}
+
+#back-to-status {
+    background: white;
+    color: #1a73e8;
+    border: 1px solid #1a73e8;
+}
+
+#back-to-status:hover {
+    background: #e8f0fe;
+}
+
+/* ── Auth forms (login.html, register.html) ─────────────────────────────── */
+
+.auth-form {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.auth-field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.auth-field input {
+    padding: 10px 14px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.auth-field input:focus {
+    border-color: #1a73e8;
+}
+
+.auth-form button[type="submit"] {
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.auth-form button[type="submit"]:hover {
+    background: #1558b0;
+}
+
+.auth-form button[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-error {
+    color: #d93025;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.auth-switch {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.auth-switch a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* ── Nav user / logout ───────────────────────────────────────────────────── */
+
+#nav-user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-email {
+    font-size: 0.8rem;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+.nav-logout-btn {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    background: transparent;
+    color: #d93025;
+    border: 1px solid #d93025;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-logout-btn:hover {
+    background: #d93025;
+    color: white;
 }

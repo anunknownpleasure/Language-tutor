@@ -42,7 +42,7 @@ async function sendAudio() {
     formData.append("history", JSON.stringify(conversationHistory));
 
     try {
-        const res = await fetch("/api/chat", { method: "POST", body: formData });
+        const res = await fetchWithAuth("/api/chat", { method: "POST", body: formData });
         const data = await res.json();
 
         conversationHistory.push({ role: "user", content: data.transcript });

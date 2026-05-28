@@ -16,6 +16,9 @@ class Settings(BaseSettings):
 
     tts_voice: str = "fr-FR-DeniseNeural"
 
+    # Used to sign JWTs — change this in production, keep it secret
+    secret_key: str = "dev-secret-change-this-in-production"
+
     class Config:
         env_file = ENV_FILE
 

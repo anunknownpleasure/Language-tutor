@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Tutor — Conversations</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="lessons.html">Lessons</a>
+            <a href="conversations.html" class="active">Conversations</a>
+            <a href="testing.html">Test</a>
+            <span id="nav-user"></span>
+        </nav>
+
+        <!-- Scenario selection screen -->
+        <div id="scenario-screen">
+            <h2>Choose a scenario</h2>
+            <p class="subtitle">Sophie will play a role. Your goal is to complete the scenario in French.</p>
+            <div id="scenario-cards"></div>
+            <button id="refresh-scenarios" class="secondary-btn">Generate new scenarios</button>
+        </div>
+
+        <!-- Conversation screen (hidden until scenario picked) -->
+        <div id="conversation-screen" class="hidden">
+            <div id="scenario-banner"></div>
+            <div id="conversation"></div>
+            <div class="controls">
+                <button id="mic-btn" onmousedown="startRecording()" onmouseup="stopRecording()">
+                    Hold to Speak
+                </button>
+                <p id="status">Press and hold the button to speak in French</p>
+            </div>
+            <button id="end-scenario" class="secondary-btn">End scenario</button>
+        </div>
+
+    </div>
+    <script src="auth.js"></script>
+    <script>requireAuth(); initNav();</script>
+    <script src="conversations.js"></script>
+</body>
+</html>

@@ -9,8 +9,11 @@
 <body>
     <div class="container">
         <nav class="nav">
-            <a href="index.html" class="active">Conversations</a>
+            <a href="index.html" class="active">Home</a>
             <a href="lessons.html">Lessons</a>
+            <a href="conversations.html">Conversations</a>
+            <a href="testing.html">Test</a>
+            <span id="nav-user"></span>
         </nav>
 
         <h1>🇫🇷 Sophie — French Tutor</h1>
@@ -30,6 +33,8 @@
         </div>
     </div>
 
+    <script src="auth.js"></script>
+    <script>requireAuth(); initNav();</script>
     <script src="app.js"></script>
 </body>
 </html>
