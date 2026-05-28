@@ -284,6 +284,7 @@ async def get_test_status(
     return {
         "level": level,
         "unlocked": unlocked,
+        "message": f"Complete {LESSONS_TO_UNLOCK_TESTING} lesson(s) to unlock testing." if not unlocked else None,
         "stages": stages,
         "required_stages": required_stages,
         "all_passed": all_passed,

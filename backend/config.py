@@ -14,7 +14,8 @@ class Settings(BaseSettings):
     groq_base_url: str = "https://api.groq.com/openai/v1"
     whisper_model: str = "whisper-large-v3-turbo"
 
-    tts_voice: str = "fr-FR-DeniseNeural"
+    tts_voice: str = "fr-FR-DeniseNeural"       # used for conversations (French)
+    tts_voice_en: str = "en-GB-SoniaNeural"     # used for lessons (English explanations)
 
     # Used to sign JWTs — change this in production, keep it secret
     secret_key: str = "dev-secret-change-this-in-production"
