@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth import get_current_user
+from config import settings
 from database import get_db
 from llm import get_lesson_response
 from models import LessonPattern, LessonProgress, UserVocabulary, User, Vocabulary
@@ -361,7 +362,7 @@ async def respond(
     # Convert Sophie's reply to speech — wrapped so a TTS failure doesn't kill the response
     audio_base64 = None
     try:
-        tts_bytes = await synthesize(sophie_message)
+        tts_bytes = await synthesize(sophie_message, voice=settings.tts_voice_en)
         audio_base64 = base64.b64encode(tts_bytes).decode()
     except Exception as e:
         print(f"TTS error (audio skipped): {e}")

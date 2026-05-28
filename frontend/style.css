@@ -277,6 +277,23 @@ h1 {
     cursor: not-allowed;
 }
 
+.lesson-stop-btn {
+    width: 100%;
+    padding: 10px;
+    background: white;
+    color: #d93025;
+    border: 1px solid #d93025;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.lesson-stop-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
 .lesson-mic-hint {
     font-size: 0.8rem;
     color: #666;

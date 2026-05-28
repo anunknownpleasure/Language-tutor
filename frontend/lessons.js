@@ -15,6 +15,7 @@ const chatEl      = document.getElementById("lesson-chat");
 const inputEl     = document.getElementById("lesson-input");
 const sendBtn     = document.getElementById("lesson-send");
 const micBtn      = document.getElementById("lesson-mic");
+const stopBtn     = document.getElementById("lesson-stop");
 const wordLabelEl = document.getElementById("word-label");
 const scoreEl     = document.getElementById("word-score");
 const attemptsEl  = document.getElementById("word-attempts");
@@ -222,7 +223,15 @@ function moveToNextWord() {
 function playAudio(base64) {
     audioEl.src = `data:audio/mpeg;base64,${base64}`;
     audioEl.play().catch(err => console.warn("Audio playback blocked:", err));
+    stopBtn.disabled = false;
 }
+
+// Stop button — immediately silences Sophie
+stopBtn.addEventListener("click", () => {
+    audioEl.pause();
+    audioEl.currentTime = 0;
+    stopBtn.disabled = true;
+});
 
 // ── UI helpers ────────────────────────────────────────────────────────────
 
