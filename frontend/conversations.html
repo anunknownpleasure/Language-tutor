@@ -14,6 +14,7 @@
             <a href="lessons.html">Lessons</a>
             <a href="conversations.html" class="active">Conversations</a>
             <a href="testing.html">Test</a>
+            <span id="nav-user"></span>
         </nav>
 
         <!-- Scenario selection screen -->
@@ -38,6 +39,8 @@
         </div>
 
     </div>
+    <script src="auth.js"></script>
+    <script>requireAuth(); initNav();</script>
     <script src="conversations.js"></script>
 </body>
 </html>

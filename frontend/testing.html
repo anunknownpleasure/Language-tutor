@@ -14,6 +14,7 @@
             <a href="lessons.html">Lessons</a>
             <a href="conversations.html">Conversations</a>
             <a href="testing.html" class="active">Test</a>
+            <span id="nav-user"></span>
         </nav>
 
         <!-- Status screen — shown first -->
@@ -47,6 +48,8 @@
         </div>
 
     </div>
+    <script src="auth.js"></script>
+    <script>requireAuth(); initNav();</script>
     <script src="testing.js"></script>
 </body>
 </html>

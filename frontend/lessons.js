@@ -27,7 +27,7 @@ const audioEl     = document.getElementById("sophie-audio");
 // ── Boot ──────────────────────────────────────────────────────────────────
 
 async function loadLesson() {
-    const res = await fetch("/api/lessons");
+    const res = await fetchWithAuth("/api/lessons");
     const data = await res.json();
 
     words = data.words;
@@ -129,7 +129,7 @@ async function sendInput(text, audioBlob) {
 
     let res;
     try {
-        res = await fetch("/api/lessons/respond", { method: "POST", body: formData });
+        res = await fetchWithAuth("/api/lessons/respond", { method: "POST", body: formData });
     } catch (networkErr) {
         appendStatus("Network error — check your connection and try again.");
         isWaiting = false;

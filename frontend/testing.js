@@ -15,7 +15,7 @@ function showScreen(id) {
 // This tells us which stages they've already passed and what's left
 
 async function loadStatus() {
-    const res = await fetch("/api/test/status");
+    const res = await fetchWithAuth("/api/test/status");
     const data = await res.json();
 
     const statusEl = document.getElementById("test-status");
@@ -67,7 +67,7 @@ async function loadStatus() {
 // Then render the appropriate screen
 
 async function startStage(stage) {
-    const res = await fetch(`/api/test?stage=${stage}`);
+    const res = await fetchWithAuth(`/api/test?stage=${stage}`);
     const data = await res.json();
 
     if (!data.unlocked) {
@@ -181,7 +181,7 @@ async function submitStage(stage, answers) {
     formData.append("stage", stage);
     formData.append("answers", JSON.stringify(answers));
 
-    const res = await fetch("/api/test/submit", {
+    const res = await fetchWithAuth("/api/test/submit", {
         method: "POST",
         body: formData,
     });

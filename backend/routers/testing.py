@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, File, Form, UploadFile
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from auth import get_current_user
 from database import get_db
 from llm import get_raw_response
 from models import LessonProgress, TestResult, UserVocabulary, Vocabulary, User
@@ -12,7 +13,6 @@ from pipeline import run_pipeline
 
 router = APIRouter(prefix="/api/test", tags=["testing"])
 
-TEST_USER_ID = 1
 LESSONS_TO_UNLOCK_TESTING = 1   # lowered for development — raise to 10 for production
 PASS_THRESHOLD = 70             # score needed to pass each stage
 
@@ -72,14 +72,18 @@ async def is_testing_unlocked(db: AsyncSession, user_id: int, level: str) -> boo
 # Stage 3: a scenario to have a conversation in (A2 only)
 
 @router.get("")
-async def get_test(stage: int = 1, db: AsyncSession = Depends(get_db)):
+async def get_test(
+    stage: int = 1,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """
     Returns test questions for the given stage.
     Stage is passed as a query parameter: /api/test?stage=1
     """
 
-    level = await get_user_level(db, TEST_USER_ID)
-    unlocked = await is_testing_unlocked(db, TEST_USER_ID, level)
+    level = await get_user_level(db, current_user.id)
+    unlocked = await is_testing_unlocked(db, current_user.id, level)
 
     if not unlocked:
         return {
@@ -91,7 +95,7 @@ async def get_test(stage: int = 1, db: AsyncSession = Depends(get_db)):
     if stage == 3 and level == "A1":
         return {"error": "Stage 3 is only available from A2 level."}
 
-    words = await get_learned_words(db, TEST_USER_ID)
+    words = await get_learned_words(db, current_user.id)
 
     # Pick up to 10 words randomly for the test
     # random.sample picks N unique items from a list without repeating
@@ -165,6 +169,7 @@ async def submit_test(
     stage: int,
     answers: str = Form(...),   # JSON string of answers
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """
     Grades the submitted answers for the given stage.
@@ -172,7 +177,7 @@ async def submit_test(
     Stage 2: answers = [{"vocabulary_id": 1, "typed": "bonjour"}]
     """
 
-    level = await get_user_level(db, TEST_USER_ID)
+    level = await get_user_level(db, current_user.id)
     parsed_answers = json.loads(answers)
     score = 0
 
@@ -222,7 +227,7 @@ Respond with a single number only. No explanation.""",
 
     # Save result to DB
     result = TestResult(
-        user_id=TEST_USER_ID,
+        user_id=current_user.id,
         level=level,
         stage=stage,
         score=score,
@@ -233,7 +238,7 @@ Respond with a single number only. No explanation.""",
 
     # If all required stages passed, advance the user's level
     if passed:
-        await check_and_advance_level(db, TEST_USER_ID, level, stage)
+        await check_and_advance_level(db, current_user.id, level, stage)
 
     await db.commit()
 
@@ -249,16 +254,19 @@ Respond with a single number only. No explanation.""",
 # Returns which stages are completed and whether the user passed overall
 
 @router.get("/status")
-async def get_test_status(db: AsyncSession = Depends(get_db)):
+async def get_test_status(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Returns the user's test progress for their current level."""
 
-    level = await get_user_level(db, TEST_USER_ID)
-    unlocked = await is_testing_unlocked(db, TEST_USER_ID, level)
+    level = await get_user_level(db, current_user.id)
+    unlocked = await is_testing_unlocked(db, current_user.id, level)
 
     # Fetch all test results for this user at this level
     result = await db.execute(
         select(TestResult).where(
-            TestResult.user_id == TEST_USER_ID,
+            TestResult.user_id == current_user.id,
             TestResult.level == level,
         ).order_by(TestResult.completed_at)
     )

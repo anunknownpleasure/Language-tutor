@@ -3,7 +3,7 @@ from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pipeline import run_pipeline
-from routers import lessons, conversations, testing
+from routers import auth, lessons, conversations, testing
 
 app = FastAPI(title="French Tutor API")
 
@@ -14,6 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router)
 app.include_router(lessons.router)
 app.include_router(conversations.router)
 app.include_router(testing.router)

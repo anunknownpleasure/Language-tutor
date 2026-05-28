@@ -16,7 +16,7 @@ const statusEl = document.getElementById("status");
 
 async function loadScenarios() {
     scenarioCards.innerHTML = "<p>Generating scenarios...</p>";
-    const res = await fetch("/api/conversations/scenarios");
+    const res = await fetchWithAuth("/api/conversations/scenarios");
     const data = await res.json();
 
     scenarioCards.innerHTML = "";
@@ -105,7 +105,7 @@ async function sendAudio() {
     formData.append("scenario", JSON.stringify(currentScenario));
 
     try {
-        const res = await fetch("/api/conversations/chat", {
+        const res = await fetchWithAuth("/api/conversations/chat", {
             method: "POST",
             body: formData,
         });

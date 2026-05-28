@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from auth import get_current_user
 from database import get_db
 from llm import get_lesson_response
 from models import LessonPattern, LessonProgress, UserVocabulary, User, Vocabulary
@@ -13,9 +14,6 @@ from stt import transcribe
 from tts import synthesize
 
 router = APIRouter(prefix="/api/lessons", tags=["lessons"])
-
-# Hardcoded test user until auth is added
-TEST_USER_ID = 1
 
 # Word is learned when: attempt_count >= 3 AND score >= 80
 LEARNED_MIN_ATTEMPTS = 3
@@ -232,11 +230,14 @@ async def fetch_lesson_pattern(
 # ── Routes ─────────────────────────────────────────────────────────────────
 
 @router.get("", response_model=LessonResponse)
-async def get_lesson(db: AsyncSession = Depends(get_db)):
-    """Return the current lesson words, pattern, and progress for the test user."""
+async def get_lesson(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Return the current lesson words, pattern, and progress for the logged-in user."""
 
-    level = await get_user_level(db, TEST_USER_ID)
-    lesson_number = await get_current_lesson_number(db, TEST_USER_ID, level)
+    level = await get_user_level(db, current_user.id)
+    lesson_number = await get_current_lesson_number(db, current_user.id, level)
 
     # Fetch the 7 vocabulary words for this lesson
     result = await db.execute(
@@ -253,7 +254,7 @@ async def get_lesson(db: AsyncSession = Depends(get_db)):
     # Build word status list
     words = []
     for word in vocab_words:
-        uv = await get_or_create_user_vocabulary(db, TEST_USER_ID, word.id)
+        uv = await get_or_create_user_vocabulary(db, current_user.id, word.id)
         await db.commit()
         words.append(WordStatus(
             id=word.id,
@@ -265,7 +266,7 @@ async def get_lesson(db: AsyncSession = Depends(get_db)):
             status=uv.status,
         ))
 
-    lessons_completed = await get_lessons_completed(db, TEST_USER_ID, level)
+    lessons_completed = await get_lessons_completed(db, current_user.id, level)
 
     return LessonResponse(
         level=level,
@@ -286,10 +287,11 @@ async def get_lesson(db: AsyncSession = Depends(get_db)):
 @router.post("/respond")
 async def respond(
     vocabulary_id: int = Form(...),
-    history: str = Form(default="[]"),     # JSON string of message history
-    message: str = Form(default=""),       # text input (used if no audio)
-    audio: UploadFile | None = File(default=None),  # voice input
+    history: str = Form(default="[]"),
+    message: str = Form(default=""),
+    audio: UploadFile | None = File(default=None),
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """
     The learner sends either text or audio.
@@ -314,14 +316,14 @@ async def respond(
     parsed_history = json.loads(history)
 
     # Get or create the user's progress row for this word
-    uv = await get_or_create_user_vocabulary(db, TEST_USER_ID, vocabulary_id)
+    uv = await get_or_create_user_vocabulary(db, current_user.id, vocabulary_id)
 
     # Fetch user's level for the prompt
-    level = await get_user_level(db, TEST_USER_ID)
+    level = await get_user_level(db, current_user.id)
 
     # Build lesson-progress context so Sophie knows where we are in the lesson
     words_context = await build_words_context(
-        db, TEST_USER_ID, vocabulary_id, word.level, word.lesson_number
+        db, current_user.id, vocabulary_id, word.level, word.lesson_number
     )
 
     # Call the LLM — wrapped so a LLM failure returns a graceful message
@@ -392,7 +394,7 @@ async def respond(
 
         learned_result = await db.execute(
             select(UserVocabulary).where(
-                UserVocabulary.user_id == TEST_USER_ID,
+                UserVocabulary.user_id == current_user.id,
                 UserVocabulary.vocabulary_id.in_(lesson_word_ids),
                 UserVocabulary.status == "learned",
             )
@@ -402,7 +404,7 @@ async def respond(
         if learned_count == len(lesson_words):
             lesson_result = await db.execute(
                 select(LessonProgress).where(
-                    LessonProgress.user_id == TEST_USER_ID,
+                    LessonProgress.user_id == current_user.id,
                     LessonProgress.level == word.level,
                     LessonProgress.lesson_number == word.lesson_number,
                 )
@@ -410,7 +412,7 @@ async def respond(
             lp = lesson_result.scalar_one_or_none()
             if not lp:
                 lp = LessonProgress(
-                    user_id=TEST_USER_ID,
+                    user_id=current_user.id,
                     level=word.level,
                     lesson_number=word.lesson_number,
                 )

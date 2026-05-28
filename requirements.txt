@@ -7,3 +7,7 @@ pydantic-settings
 python-multipart
 sqlalchemy
 aiosqlite
+asyncpg
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1

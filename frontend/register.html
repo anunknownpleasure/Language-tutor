@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Tutor — Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🇫🇷 Sophie — French Tutor</h1>
+        <h2>Create your account</h2>
+
+        <form id="register-form" class="auth-form">
+            <div class="auth-field">
+                <label for="email">Email</label>
+                <input id="email" type="email" placeholder="you@example.com" required autocomplete="email" />
+            </div>
+            <div class="auth-field">
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Choose a password" required autocomplete="new-password" />
+            </div>
+            <p id="auth-error" class="auth-error hidden"></p>
+            <button type="submit" id="register-btn">Create account</button>
+        </form>
+
+        <p class="auth-switch">
+            Already have an account? <a href="login.html">Log in here</a>
+        </p>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // If already logged in, skip straight to the app
+        if (getToken()) window.location.href = "/index.html";
+
+        document.getElementById("register-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email    = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const errorEl  = document.getElementById("auth-error");
+            const btn      = document.getElementById("register-btn");
+
+            errorEl.classList.add("hidden");
+            btn.disabled = true;
+            btn.textContent = "Creating account...";
+
+            try {
+                const res = await fetch("/api/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    // Show the server's error (e.g. "Email already registered")
+                    errorEl.textContent = data.detail || "Registration failed";
+                    errorEl.classList.remove("hidden");
+                    return;
+                }
+
+                // Store token + email, go straight into the app
+                setAuth(data.token, data.email);
+                window.location.href = "/lessons.html";
+
+            } catch (err) {
+                errorEl.textContent = "Network error — please try again.";
+                errorEl.classList.remove("hidden");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Create account";
+            }
+        });
+    </script>
+</body>
+</html>

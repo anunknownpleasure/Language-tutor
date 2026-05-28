@@ -121,7 +121,8 @@ h1 {
 .nav {
     display: flex;
     gap: 16px;
-    justify-content: center;
+    align-items: center;
+    /* Links sit left; #nav-user uses margin-left: auto to sit right */
 }
 
 .nav a {
@@ -557,4 +558,118 @@ h1 {
 
 #back-to-status:hover {
     background: #e8f0fe;
+}
+
+/* ── Auth forms (login.html, register.html) ─────────────────────────────── */
+
+.auth-form {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.auth-field label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.auth-field input {
+    padding: 10px 14px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.auth-field input:focus {
+    border-color: #1a73e8;
+}
+
+.auth-form button[type="submit"] {
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.auth-form button[type="submit"]:hover {
+    background: #1558b0;
+}
+
+.auth-form button[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.auth-error {
+    color: #d93025;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.auth-switch {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.auth-switch a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+/* ── Nav user / logout ───────────────────────────────────────────────────── */
+
+#nav-user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-email {
+    font-size: 0.8rem;
+    color: #555;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+.nav-logout-btn {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    background: transparent;
+    color: #d93025;
+    border: 1px solid #d93025;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.nav-logout-btn:hover {
+    background: #d93025;
+    color: white;
 }

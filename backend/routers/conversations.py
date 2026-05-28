@@ -3,19 +3,21 @@ from fastapi import APIRouter, Depends, File, Form, UploadFile
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from auth import get_current_user
 from database import get_db
 from llm import get_raw_response
-from models import UserVocabulary, Vocabulary
+from models import User, UserVocabulary, Vocabulary
 from pipeline import run_pipeline
 from prompts import build_conversation_prompt, build_scenario_prompt
 
 router = APIRouter(prefix="/api/conversations", tags=["conversations"])
 
-TEST_USER_ID = 1
-
 
 @router.get("/scenarios")
-async def get_scenarios(db: AsyncSession = Depends(get_db)):
+async def get_scenarios(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Generate 3 scenario options based on the user's learned vocabulary."""
 
     # Fetch all learned vocabulary for this user
@@ -23,7 +25,7 @@ async def get_scenarios(db: AsyncSession = Depends(get_db)):
         select(Vocabulary)
         .join(UserVocabulary, UserVocabulary.vocabulary_id == Vocabulary.id)
         .where(
-            UserVocabulary.user_id == TEST_USER_ID,
+            UserVocabulary.user_id == current_user.id,
             UserVocabulary.status == "learned",
         )
     )
@@ -72,6 +74,8 @@ async def chat(
     audio: UploadFile = File(...),
     history: str = Form(default="[]"),
     scenario: str = Form(default="{}"),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """Run the voice pipeline with scenario context injected."""
     audio_bytes = await audio.read()
