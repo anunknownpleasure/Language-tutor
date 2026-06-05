@@ -7,12 +7,11 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth import get_current_user
-from config import settings
 from database import get_db
-from llm import get_lesson_response
+from llm import get_lesson_response, get_score
 from models import LessonPattern, LessonProgress, UserVocabulary, User, Vocabulary
 from stt import transcribe
-from tts import synthesize
+from tts import synthesize_mixed
 
 router = APIRouter(prefix="/api/lessons", tags=["lessons"])
 
@@ -173,7 +172,7 @@ async def build_words_context(
     )
     uv_map = {uv.vocabulary_id: uv for uv in uv_result.scalars().all()}
 
-    learned, remaining = [], []
+    learned = []
     current_label = ""
 
     for w in all_words:
@@ -184,15 +183,12 @@ async def build_words_context(
             current_label = f"{w.word_fr} ({w.word_en})"
         elif is_learned:
             learned.append(w.word_fr)
-        else:
-            remaining.append(w.word_fr)
+        # Future words are intentionally hidden from Sophie
 
     parts = []
     if learned:
-        parts.append(f"Learned: {', '.join(learned)}")
+        parts.append(f"Learned so far: {', '.join(learned)}")
     parts.append(f"Teaching now: {current_label}")
-    if remaining:
-        parts.append(f"Still to cover: {', '.join(remaining)}")
 
     return " | ".join(parts)
 
@@ -355,14 +351,28 @@ async def respond(
             "lesson_complete": False,
         }
 
-    # Parse Sophie's structured response
+    # Parse Sophie's response — she only returns MESSAGE: now, no ATTEMPT_SCORE
     sophie_message = parse_message(raw_response)
-    attempt_score = parse_attempt_score(raw_response)
 
-    # Convert Sophie's reply to speech — wrapped so a TTS failure doesn't kill the response
+    # Silent scorer — completely separate LLM call, student never sees this
+    # Only runs when the student actually typed something (not the hidden "start" trigger)
+    attempt_score = None
+    if message and message.strip().lower() != "start":
+        try:
+            attempt_score = await get_score(
+                word_fr=word.word_fr,
+                word_en=word.word_en,
+                pattern_fr=pattern.pattern_fr if pattern else "",
+                student_input=message,
+            )
+        except Exception as e:
+            print(f"Scorer error (skipped): {e}")
+
+    # Convert Sophie's reply to speech using mixed-language TTS
+    # English parts → American voice, [FR]...[/FR] parts → French voice
     audio_base64 = None
     try:
-        tts_bytes = await synthesize(sophie_message, voice=settings.tts_voice_en)
+        tts_bytes = await synthesize_mixed(sophie_message)
         audio_base64 = base64.b64encode(tts_bytes).decode()
     except Exception as e:
         print(f"TTS error (audio skipped): {e}")
@@ -370,7 +380,7 @@ async def respond(
     word_learned = False
     lesson_complete = False
 
-    # Only update score if Sophie scored an attempt
+    # Update score silently if the scorer returned a number
     if attempt_score is not None:
         uv.score = calculate_new_score(uv.score, attempt_score)
         uv.attempt_count += 1
