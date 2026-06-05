@@ -18,4 +18,6 @@ WORKDIR /app/backend
 # Cloud Run uses port 8080 by default
 EXPOSE 8080
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Use shell form so $PORT env variable is read at runtime
+# Cloud Run injects PORT — we use it directly instead of hardcoding 8080
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}
