@@ -1,0 +1,38 @@
+steps:
+  # Step 1 — Build the Docker image
+  # $PROJECT_ID is automatically filled in by GCP
+  # $COMMIT_SHA is the git commit hash — gives every image a unique tag
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/${_SERVICE_NAME}:$COMMIT_SHA'
+      - '.'
+
+  # Step 2 — Push the image to Artifact Registry (GCP's container storage)
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/${_SERVICE_NAME}:$COMMIT_SHA'
+
+  # Step 3 — Deploy the new image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE_NAME}'
+      - '--image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_SERVICE_NAME}/${_SERVICE_NAME}:$COMMIT_SHA'
+      - '--region=${_REGION}'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+
+# Substitutions — configure these once in the Cloud Build trigger settings
+# _REGION: the GCP region e.g. us-central1, europe-west1
+# _SERVICE_NAME: what to call the Cloud Run service e.g. french-tutor
+substitutions:
+  _REGION: us-central1
+  _SERVICE_NAME: french-tutor
+
+options:
+  logging: CLOUD_LOGGING_ONLY

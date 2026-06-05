@@ -1,0 +1,23 @@
+# Files GCP should NOT upload when building
+# Same idea as .gitignore — keeps the build fast and clean
+
+.gcloudignore
+.git
+.gitignore
+
+# Python virtual environment — GCP installs its own inside the container
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Local database — production uses Cloud SQL (PostgreSQL)
+data/
+
+# Local environment secrets — set these in Cloud Run console instead
+.env
+
+# Editor and OS files
+.vscode/
+.idea/
+*.DS_Store
