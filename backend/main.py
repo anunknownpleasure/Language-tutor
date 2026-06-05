@@ -1,9 +1,13 @@
 import json
+from pathlib import Path
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pipeline import run_pipeline
 from routers import auth, lessons, conversations, testing
+
+# Works both locally (../frontend) and inside Docker (/app/frontend)
+FRONTEND_DIR = Path(__file__).parent.parent / "frontend"
 
 app = FastAPI(title="French Tutor API")
 
@@ -41,4 +45,4 @@ async def chat(
     return result
 
 
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
+app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
